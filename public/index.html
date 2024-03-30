@@ -24,11 +24,8 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <!-- <script
-      async
-      defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ViHum68MrT-DFDKwsrIMGWNiT5hCVDs&loading=async"
-    ></script> -->
+
+    <script src="config.js"></script>
     <script>
       ((g) => {
         var h,
@@ -65,7 +62,7 @@
           ? console.warn(p + " only loads once. Ignoring:", g)
           : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
       })({
-        key: "AIzaSyC9ViHum68MrT-DFDKwsrIMGWNiT5hCVDs",
+        key: "GOOGLE_MAPS_API_KEY",
         v: "weekly",
         // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
         // Add other bootstrap parameters as needed, using camel case.
