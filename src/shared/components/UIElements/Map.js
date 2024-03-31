@@ -1,45 +1,37 @@
 import React, { useEffect, useRef } from "react";
+import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
+import GOOGLE_MAPS_API_KEY from "../../../config";
 import "./Map.css";
 
-const Map = (props) => {
-  const mapRef = useRef();
+const MapComponent = (props) => {
+  const mapRef = useRef(null);
   const { center, zoom } = props;
 
-  useEffect(() => {
-    let map;
+  //   useEffect(() => {
+  //     let map;
 
-    async function initMap() {
-      try {
-        console.log(mapRef.current);
-        const { Map } = await window.google.maps.importLibrary("maps");
+  //     async function initMap() {
+  //       try {
+  //         const { Map } = await window.google.maps.importLibrary("maps");
 
-        map = new Map(mapRef.current, {
-          center: center,
-          zoom: zoom,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  //         map = new Map(mapRef.current, {
+  //           center: center,
+  //           zoom: zoom,
+  //         });
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
 
-    console.log("map", map);
-    console.log(initMap());
-    initMap();
-    // const map = new window.google.maps.Map(mapRef.current, {
-    //   center: center,
-    //   zoom: zoom,
-    // });
-
-    // new window.google.maps.Marker({ position: center, map: map });
-  }, [center, zoom]);
-
+  //     initMap();
+  //   }, [center, zoom]);
   return (
-    <div
-      ref={mapRef}
-      className={`map ${props.className}`}
-      style={props.style}
-    ></div>
+    <div ref={mapRef} className={`map ${props.className}`} style={props.style}>
+      <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
+        <Map center={center} zoom={zoom}></Map>
+      </APIProvider>
+    </div>
   );
 };
 
-export default Map;
+export default MapComponent;
