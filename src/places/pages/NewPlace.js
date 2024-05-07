@@ -9,6 +9,7 @@ import Button from "../../shared/components/FormElements/Button";
 import "./NewPlace.css";
 
 const formReducer = (state, action) => {
+  console.log(action);
   switch (action.type) {
     case "INPUT_CHANGE":
       let formIsValid = true;
@@ -78,6 +79,14 @@ const NewPlace = () => {
         label="Description"
         errorText="Please enter a valid description min 5 characters long"
         validators={[VALIDATOR_MINLENGTH(5)]}
+        onInput={inputHandler}
+      />
+      <Input
+        element="input"
+        id="address"
+        label="Address"
+        errorText="Please enter a valid address"
+        validators={[VALIDATOR_REQUIRE]}
         onInput={inputHandler}
       />
       <Button type="submit" disabled={!formState.isValid}>
