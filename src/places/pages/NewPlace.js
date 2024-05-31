@@ -30,7 +30,7 @@ const NewPlace = () => {
 
   const placeSubmitHandler = (event) => {
     event.preventDefault();
-    console.log(formState);
+    console.log("formState", formState);
   };
 
   return (
