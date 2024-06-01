@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom/";
 const DUMMY_PLACES = [
   {
     id: "p1",
-    title: "Empire State Building",
+    title: "Empire State Building 1",
     description: "One of the most famous sky scrapers in the world!",
     imageUrl:
       "https://upload.wikimedia.org/wikipedia/commons/1/10/Empire_State_Building_%28aerial_view%29.jpg",
@@ -18,8 +18,8 @@ const DUMMY_PLACES = [
   },
   {
     id: "p2",
-    title: "Empire State Building",
-    description: "One of the most famous sky scrapers in the world!",
+    title: "Empire State Building 2",
+    description: "Two of the most famous sky scrapers in the world!",
     imageUrl:
       "https://upload.wikimedia.org/wikipedia/commons/1/10/Empire_State_Building_%28aerial_view%29.jpg",
     address: "20 W 34th St, New York, NY 10001",
