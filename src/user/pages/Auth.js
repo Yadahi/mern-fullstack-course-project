@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, Fragment } from "react";
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import Card from "../../shared/components/UIElements/Card";
@@ -65,6 +65,9 @@ const Auth = () => {
           }
         );
         const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
         console.log(responseData);
         setIsLoading(false);
         auth.login();
@@ -100,50 +103,56 @@ const Auth = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
+  const errorHandler = () => {
+    setError(null);
+  };
+
   return (
-    <Card className="authentication">
-      {isLoading && <LoadingSpinner asOverlay />}
-      {error && <ErrorModal error={error} onClear={setError} />}
-      <h2>Login Required</h2>
-      <hr />
-      <form onSubmit={loginSubmitHandler}>
-        {!isLoginMode && (
+    <Fragment>
+      <ErrorModal error={error} onClear={errorHandler} />
+      <Card className="authentication">
+        {isLoading && <LoadingSpinner asOverlay />}
+        <h2>Login Required</h2>
+        <hr />
+        <form onSubmit={loginSubmitHandler}>
+          {!isLoginMode && (
+            <Input
+              element="input"
+              type="text"
+              id="name"
+              label="Name"
+              errorText="Please enter a valid name"
+              validators={[VALIDATOR_REQUIRE()]}
+              onInput={inputHandler}
+            />
+          )}
           <Input
             element="input"
-            type="text"
-            id="name"
-            label="Name"
-            errorText="Please enter a valid name"
-            validators={[VALIDATOR_REQUIRE()]}
+            type="email"
+            id="email"
+            label="E-Mail"
+            errorText="Please enter a valid email address"
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_EMAIL()]}
             onInput={inputHandler}
           />
-        )}
-        <Input
-          element="input"
-          type="email"
-          id="email"
-          label="E-Mail"
-          errorText="Please enter a valid email address"
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_EMAIL()]}
-          onInput={inputHandler}
-        />
-        <Input
-          element="input"
-          type="password"
-          id="password"
-          label="Password"
-          errorText="Please enter a valid password"
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_REQUIRE()]}
-          onInput={inputHandler}
-        />
-        <Button type="submit" disabled={!formState.isValid}>
-          {isLoginMode ? "LOGIN" : "SIGNUP"}
+          <Input
+            element="input"
+            type="password"
+            id="password"
+            label="Password"
+            errorText="Please enter a valid password"
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_REQUIRE()]}
+            onInput={inputHandler}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            {isLoginMode ? "LOGIN" : "SIGNUP"}
+          </Button>
+        </form>
+        <Button inverse onClick={switchModeHandler}>
+          SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
         </Button>
-      </form>
-      <Button inverse onClick={switchModeHandler}>
-        SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
-      </Button>
-    </Card>
+      </Card>
+    </Fragment>
   );
 };
 export default Auth;
