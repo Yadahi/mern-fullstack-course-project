@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import Button from "../../shared/components/FormElements/Button";
 import Input from "../../shared/components/FormElements/Input";
 import Card from "../../shared/components/UIElements/Card";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useForm } from "../../shared/hooks/form-hook";
 import {
   VALIDATOR_EMAIL,
@@ -13,6 +15,9 @@ import { AuthContext } from "../../shared/context/auth-context";
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -43,6 +48,8 @@ const Auth = () => {
       });
     } else {
       try {
+        setIsLoading(true);
+        setError(null);
         const response = await fetch(
           " http://localhost:5000/api/users/signup",
           {
@@ -59,12 +66,14 @@ const Auth = () => {
         );
         const responseData = await response.json();
         console.log(responseData);
+        setIsLoading(false);
+        auth.login();
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
+        setError(error.message || "Something went wrong!");
       }
     }
-
-    auth.login();
   };
 
   const switchModeHandler = () => {
@@ -93,6 +102,8 @@ const Auth = () => {
 
   return (
     <Card className="authentication">
+      {isLoading && <LoadingSpinner asOverlay />}
+      {error && <ErrorModal error={error} onClear={setError} />}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={loginSubmitHandler}>
