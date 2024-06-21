@@ -36,19 +36,33 @@ const Auth = () => {
     event.preventDefault();
 
     if (isLoginMode) {
-      fetch(" http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formState.inputs.email.value,
-          password: formState.inputs.password.value,
-        }),
-      });
+      setIsLoading(true);
+      try {
+        setError(null);
+        const response = await fetch(" http://localhost:5000/api/users/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+
+        setIsLoading(false);
+        auth.login();
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+        setError(error.message || "Something went wrong!");
+      }
     } else {
       try {
-        setIsLoading(true);
         setError(null);
         const response = await fetch(
           " http://localhost:5000/api/users/signup",
@@ -68,7 +82,6 @@ const Auth = () => {
         if (!response.ok) {
           throw new Error(responseData.message);
         }
-        console.log(responseData);
         setIsLoading(false);
         auth.login();
       } catch (error) {
