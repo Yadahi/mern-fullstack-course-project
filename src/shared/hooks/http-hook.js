@@ -11,6 +11,7 @@ export const useHttpClient = () => {
       setIsLoading(true);
       const httpAbortCtrl = new AbortController();
       activeHttpRequests.current.push(httpAbortCtrl);
+
       try {
         const response = await fetch(url, {
           method: method,
@@ -20,16 +21,25 @@ export const useHttpClient = () => {
         });
 
         const responseData = await response.json();
+
+        activeHttpRequests.current = activeHttpRequests.current.filter(
+          (reqCtrl) => reqCtrl !== httpAbortCtrl
+        );
+
         if (!response.ok) {
           throw new Error(responseData.message);
         }
+        setIsLoading(false);
 
         return responseData;
       } catch (error) {
         setError(error.message);
+        setIsLoading(false);
+
+        throw error;
       }
-      setIsLoading(false);
-    }
+    },
+    []
   );
 
   const clearError = () => {
@@ -37,8 +47,12 @@ export const useHttpClient = () => {
   };
 
   useEffect(() => {
+    console.log("cleanup");
     return () => {
-      activeHttpRequests.current.forEach((abortCtrl) => abortCtrl.abort());
+      activeHttpRequests.current.forEach((abortCtrl) => {
+        console.log("aborting", abortCtrl);
+        abortCtrl.abort();
+      });
     };
   }, []);
 

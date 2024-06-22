@@ -11,12 +11,12 @@ import {
 } from "../../shared/util/validators";
 import "./Auth.css";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
+  const { sendRequest, isLoading, error, clearError } = useHttpClient();
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -36,58 +36,43 @@ const Auth = () => {
     event.preventDefault();
 
     if (isLoginMode) {
-      setIsLoading(true);
       try {
-        setError(null);
-        const response = await fetch(" http://localhost:5000/api/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        await sendRequest(
+          " http://localhost:5000/api/users/login",
+
+          "POST",
+          JSON.stringify({
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
-        });
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
+          {
+            "Content-Type": "application/json",
+          }
+        );
 
-        setIsLoading(false);
         auth.login();
       } catch (error) {
         console.log(error);
-        setIsLoading(false);
-        setError(error.message || "Something went wrong!");
       }
     } else {
       try {
-        setError(null);
-        const response = await fetch(
+        await sendRequest(
           " http://localhost:5000/api/users/signup",
+
+          "POST",
+          JSON.stringify({
+            name: formState.inputs.name.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: formState.inputs.name.value,
-              email: formState.inputs.email.value,
-              password: formState.inputs.password.value,
-            }),
+            "Content-Type": "application/json",
           }
         );
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
-        setIsLoading(false);
+
         auth.login();
       } catch (error) {
         console.log(error);
-        setIsLoading(false);
-        setError(error.message || "Something went wrong!");
       }
     }
   };
@@ -116,13 +101,9 @@ const Auth = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const errorHandler = () => {
-    setError(null);
-  };
-
   return (
     <Fragment>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay />}
         <h2>Login Required</h2>
