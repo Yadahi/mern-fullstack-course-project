@@ -47,7 +47,6 @@ export const useHttpClient = () => {
   };
 
   useEffect(() => {
-    console.log("cleanup");
     return () => {
       activeHttpRequests.current.forEach((abortCtrl) => {
         console.log("aborting", abortCtrl);

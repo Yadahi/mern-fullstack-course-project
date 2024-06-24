@@ -7,6 +7,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useForm } from "../../shared/hooks/form-hook";
 import {
   VALIDATOR_EMAIL,
+  VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
 import "./Auth.css";
@@ -135,7 +136,11 @@ const Auth = () => {
             id="password"
             label="Password"
             errorText="Please enter a valid password"
-            validators={[VALIDATOR_REQUIRE(), VALIDATOR_REQUIRE()]}
+            validators={[
+              VALIDATOR_REQUIRE(),
+              VALIDATOR_REQUIRE(),
+              VALIDATOR_MINLENGTH(5),
+            ]}
             onInput={inputHandler}
           />
           <Button type="submit" disabled={!formState.isValid}>
