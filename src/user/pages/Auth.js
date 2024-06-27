@@ -58,19 +58,31 @@ const Auth = () => {
       }
     } else {
       try {
+        // Create a new instance of the FormData object
+        // The FormData object is a built-in JavaScript object that allows you to create key-value pairs suitable for submission using multipart/form-data encoding.
+        // This type of data is often used when sending forms that include files or other binary data.
         const formData = new FormData();
+
+        // Append the email field to the FormData object
         formData.append("email", formState.inputs.email.value);
+
+        // Append the name field to the FormData object
         formData.append("name", formState.inputs.name.value);
+
+        // Append the password field to the FormData object
         formData.append("password", formState.inputs.password.value);
+
+        // Append the image field to the FormData object
         formData.append("image", formState.inputs.image.value);
 
+        // Send a POST request to the server with the FormData object
         const responseData = await sendRequest(
-          " http://localhost:5000/api/users/signup",
-
+          "http://localhost:5000/api/users/signup",
           "POST",
           formData
         );
 
+        // Log in the user using the response data
         auth.login(responseData.user.id);
       } catch (error) {
         console.log(error);
