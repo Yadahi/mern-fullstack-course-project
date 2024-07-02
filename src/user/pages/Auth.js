@@ -69,7 +69,7 @@ const Auth = () => {
         );
 
         // Log in the user using the response data.
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (error) {
         // Log any errors that occur during authentication.
         console.log(error);
@@ -104,7 +104,7 @@ const Auth = () => {
         );
 
         // Log in the user using the response data.
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (error) {
         // Log any errors that occur during signup.
         console.log(error);
