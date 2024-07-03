@@ -68,6 +68,7 @@ const Auth = () => {
           }
         );
 
+        console.log("responseData", responseData);
         // Log in the user using the response data.
         auth.login(responseData.userId, responseData.token);
       } catch (error) {
