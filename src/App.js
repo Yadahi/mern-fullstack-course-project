@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -16,14 +16,28 @@ import { AuthContext } from "./shared/context/auth-context";
 const App = () => {
   const [token, setToken] = useState(false);
   const [userId, setUserId] = useState(false);
+
   const login = useCallback((uid, token) => {
     setToken(token);
+    localStorage.setItem("userData", JSON.stringify({ userId: uid, token }));
     setUserId(uid);
   }, []);
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
+    localStorage.removeItem("userData");
   }, []);
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("userData"));
+    if (
+      storedData &&
+      storedData.token
+      // new Date(storedData.expiration) > new Date()
+    ) {
+      login(storedData.userId, storedData.token);
+    }
+  }, [login]);
 
   let routes;
   if (token) {
