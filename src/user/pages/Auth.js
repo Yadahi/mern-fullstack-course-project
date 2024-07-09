@@ -56,7 +56,7 @@ const Auth = () => {
       try {
         // Send a POST request to the server to authenticate the user.
         const responseData = await sendRequest(
-          " http://localhost:5000/api/users/login",
+          `${process.env.REACT_APP_BACKEND_URL}/users/login`,
 
           "POST",
           JSON.stringify({
@@ -99,7 +99,7 @@ const Auth = () => {
 
         // Send a POST request to the server to sign up the user.
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/signup",
+          `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
           "POST",
           formData
         );
